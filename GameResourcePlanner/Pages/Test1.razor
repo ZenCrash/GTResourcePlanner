@@ -1,0 +1,53 @@
+﻿@using GameResourcePlanner.Data;
+@using System.Text.Json;
+
+@page "/test1"
+<h1>Test1</h1>
+
+<div class="svg-container" @oncontextmenu:preventDefault="true" @oncontextmenu="ShowContextMenu">
+    <svg id="svg-element" width="400" height="300">
+        <!-- Your SVG content here -->
+        <circle cx="50" cy="50" r="40" fill="blue" />
+    </svg>
+
+    @if (showContextMenu)
+    {
+        <div class="context-menu" style="left: @contextMenuXpx; top: @contextMenuYpx;">
+            <!-- Context menu items -->
+            <button @onclick="() => ContextMenuAction(1)">Option 1</button>
+            <button @onclick="() => ContextMenuAction(2)">Option 2</button>
+        </div>
+    }
+</div>
+
+@code {
+    private bool showContextMenu = false;
+    private string contextMenuXpx = "0px";
+    private string contextMenuYpx = "0px";
+
+    private MouseEventArgs currentMouseEventArgs;
+
+    private void ShowContextMenu(MouseEventArgs e)
+    {
+        currentMouseEventArgs = e;
+        showContextMenu = true;
+        contextMenuXpx = $"{e.ClientX}px";
+        contextMenuYpx = $"{e.ClientY}px";
+    }
+
+    private async Task ContextMenuAction(int option)
+    {
+        if (option == 1)
+        {
+            // Implement action for Option 1
+        }
+        else if (option == 2)
+        {
+            // Implement action for Option 2
+        }
+
+        showContextMenu = false;
+        await InvokeAsync(StateHasChanged);
+    }
+}
+

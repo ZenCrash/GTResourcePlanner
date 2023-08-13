@@ -1,0 +1,89 @@
+﻿@using GameResourcePlanner.Data;
+
+@page "/draggablesquare"
+<h1>Draggable Square</h1>
+
+<svg tabindex="0" height="1000" width="1000" style="border:1px solid #AAAAAA" @onkeydown="@(async (args) => await Move(args))" @onmouseup="@(async (args) => await Click(args))">
+    <rect x="@x" y="@y" height="@squareElementSizeHeight" width="@squareElementSizeWidth" style="fill: #AAAAAA; border: 1px solid #000000">
+    </rect>
+
+    <text x="@(x + 10)" y="@(y + 20)" style="fill:black;">
+        @*Header*@
+        <tspan x="@(x + 120)" y="@(y + 20)" style="font-weight: bold;">Mixer</tspan>
+
+        @*Input*@
+        <tspan x="@(x + 10)" y="@(y + 45)" style="font-weight: bold;">Input</tspan>
+        <tspan x="@(x + 10)" y="@(y + 65)">1 Sulfur Dust</tspan>
+        <tspan x="@(x + 10)" y="@(y + 85)">2000L Oxygen</tspan>
+
+        @*Output*@
+        <tspan x="@(x + 160)" y="@(y + 45)" style="font-weight: bold;">Output:</tspan>
+        <tspan x="@(x + 160)" y="@(y + 65)">2.000L Sulfur Dioxide</tspan>
+
+        @*Stats*@
+        <tspan x="@(x + 10)" y="@(y + 145)">Total: 36.000 EU</tspan>
+        <tspan x="@(x + 10)" y="@(y + 165)">Ussage: 60 EU/t</tspan>
+        <tspan x="@(x + 10)" y="@(y + 185)">Time: 30 Sec</tspan>
+
+        @*Test Info*@
+        <tspan x="@(x + 10)" y="@(y + 205)">MouseX: @mouseX MouseY: @mouseY</tspan>
+    </text>
+
+@*    <rect x="@squares[1].X" y="@squares[1].Y" height="@squareElementSizeHeight" width="@squareElementSizeWidth" style="fill: #CCCCCC; border: 1px solid #000000">
+    </rect>*@
+</svg>
+
+@code {
+    int squareElementSizeHeight = 250;
+    int squareElementSizeWidth = 350;
+    int marginRow = 50;
+    int marginColumn = 50;
+    int x = 5;
+    int y = 5;
+    double mouseX = 0;
+    double mouseY = 0;
+
+    int selectedSquare = 1;
+
+    List<(int X, int Y)> squares = new List<(int X, int Y)>
+    {
+        (5, 5),   // Position of the first rectangle
+        (400, 5)  // Position of the second rectangle
+    };
+
+    Task Move(KeyboardEventArgs e)
+    {
+        Console.WriteLine("Works");
+        int moveMeX = squareElementSizeWidth + marginColumn;
+        int moveMeY = squareElementSizeHeight + marginRow;
+
+
+
+        switch (e.Key)
+        {
+            case "ArrowDown":
+                y += moveMeY;
+                break;
+            case "ArrowUp":
+                y -= moveMeY;
+                break;
+            case "ArrowLeft":
+                x -= moveMeX;
+                break;
+            case "ArrowRight":
+                x += moveMeX;
+                break;
+            default:
+                break;
+        }
+        return Task.CompletedTask;
+    }
+
+    Task Click(MouseEventArgs e)
+    {
+        mouseX = e.ClientX;
+        mouseY = e.ClientY;
+
+        return Task.CompletedTask;
+    }
+}

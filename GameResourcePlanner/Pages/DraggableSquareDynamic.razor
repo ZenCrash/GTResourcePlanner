@@ -1,0 +1,174 @@
+﻿@using GameResourcePlanner.Data;
+@using System.Text.Json;
+
+@page "/draggablesquaredynamic"
+<h1>Draggable Square</h1>
+
+<div class="svg-container" @oncontextmenu:preventDefault="true" @oncontextmenu="ShowContextMenu">
+    <svg tabindex="0" height="1000" width="1000" style="border:1px solid #AAAAAA" 
+        @onkeydown="@(async (args) => await Move(args))"
+        @onmouseup="@(async (args) => await Click(args))">
+
+        @*Square 1*@
+        <rect x="@x" y="@y" height="@squareElementSizeHeight" width="@squareElementSizeWidth" style="fill: #AAAAAA; border: 1px solid #000000"></rect>
+        @*Text 1*@
+        <text x="@(x + 10)" y="@(y + 20)" style="fill:black">
+            @*Header*@
+            <tspan x="@(x + 120)" y="@(y + 20)" style="font-weight: bold">Mixer</tspan>
+
+            @*Input*@
+            <tspan x="@(x + 10)" y="@(y + 45)" style="font-weight: bold">Input</tspan>
+            <tspan x="@(x + 10)" y="@(y + 65)">1 Sulfur Dust</tspan>
+            <tspan x="@(x + 10)" y="@(y + 85)">2000L Oxygen</tspan>
+
+            @*Output*@
+            <tspan x="@(x + 160)" y="@(y + 45)" style="font-weight: bold">Output:</tspan>
+            <tspan x="@(x + 160)" y="@(y + 65)">2.000L Sulfur Dioxide</tspan>
+
+            @*Stats*@
+            @*Stats*@
+            <tspan x="@(x + 10)" y="@(y + 145)">Total: 36.000 EU</tspan>
+            <tspan x="@(x + 10)" y="@(y + 165)">Ussage: 60 EU/t</tspan>
+            <tspan x="@(x + 10)" y="@(y + 185)">Time: 30 Sec</tspan>
+
+            @*Test Info*@
+            <tspan x="@(x + 10)" y="@(y + 205)">MouseX: @MouseLeftClickX MouseY: @MouseLeftClickY</tspan>
+        </text>
+    </svg>
+
+    @*Context Menu Items*@
+    @if (showContextMenu)
+    {
+        <div class="context-menu" style="position: absolute; left: @contextMenuXpx; top: @contextMenuYpx;">
+            <!-- Context menu items -->
+            <div class="context-menu-item" @onclick="() => ContextMenuAction(1)">Add New Recepie</div>
+            <div class="context-menu-item" @onclick="() => ContextMenuAction(2)">Remove Recepie</div>
+        </div>
+    }
+
+    @if (showRecipePopup)
+    {
+        <div class="overlay">
+            <RecipePopup Recipes="@existingRecepies"
+                         RecipeSelected="HandleRecipeSelected"
+                         NewRecipeAdded="HandleNewRecipeAdded" />
+        </div>
+    }
+</div>
+
+@code {
+    public bool showContextMenu = false;
+    public string contextMenuXpx = "0px";
+    public string contextMenuYpx = "0px";
+    public bool showRecipePopup = false;
+
+    int squareElementSizeHeight = 250;
+    int squareElementSizeWidth = 350;
+    int marginRow = 50;
+    int marginColumn = 50;
+    int x = 5;
+    int y = 5;
+    double MouseLeftClickX = 0;
+    double MouseLeftClickY = 0;
+
+    RecepieLogic recepieLogic = new();
+    List<Recepie> existingRecepies = new();
+
+    int selectedSquare = 1;
+
+    List<(int X, int Y, int Width, int Height)> RecepieSizeAndLocation = new ()
+    {
+        (5, 5, 250, 350),   // Position of the first rectangle
+    };
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        existingRecepies = recepieLogic.GetRecepiesFromJson();
+    }
+
+    //Keyboard events
+    Task Move(KeyboardEventArgs e)
+    {
+        int moveMeX = squareElementSizeWidth + marginColumn;
+        int moveMeY = squareElementSizeHeight + marginRow;
+
+        switch (e.Key)
+        {
+            case "ArrowDown":
+                y += moveMeY;
+                break;
+            case "ArrowUp":
+                y -= moveMeY;
+                break;
+            case "ArrowLeft":
+                x -= moveMeX;
+                break;
+            case "ArrowRight":
+                x += moveMeX;
+                break;
+            default:
+                break;
+        }
+        return Task.CompletedTask;
+    }
+
+    //Mouse events
+    Task Click(MouseEventArgs e)
+    {
+        if (e.Button == 0) // Check if left mouse button was clicked (Button == 0)
+        {
+            showContextMenu = false; // Close the context menu
+        }
+
+        //Testing
+        MouseLeftClickX = e.ClientX;
+        MouseLeftClickY = e.ClientY;
+
+        return Task.CompletedTask;
+    }
+
+    //Context Menu
+    private void ShowContextMenu(MouseEventArgs e)
+    {
+        showContextMenu = true;
+        contextMenuXpx = $"{e.ClientX}px";
+        contextMenuYpx = $"{e.ClientY}px";
+    }
+
+    //Context Menu Actions
+    private async Task ContextMenuAction(int option)
+    {
+        if (option == 1) //Add
+        {
+            showRecipePopup = true;
+        }
+        else if (option == 2) //Remove
+        {
+            // Implement action for Option 2
+        }
+
+        showContextMenu = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    //Recepie
+
+    private async Task HandleRecipeSelected(Recepie recipe)
+    {
+        if (recipe != null)
+        {
+            // Handle selected recipe
+        }
+        showRecipePopup = false;
+    }
+
+    private async Task HandleNewRecipeAdded(string newRecipeName)
+    {
+        if (!string.IsNullOrWhiteSpace(newRecipeName))
+        {
+            // Handle adding new recipe
+        }
+        showRecipePopup = false;
+    }
+}

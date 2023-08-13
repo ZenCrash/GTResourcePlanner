@@ -1,0 +1,29 @@
+[
+  {
+    "MachineName": "Machine A",
+    "Inputs": {
+      "Item1": 5,
+      "Item2": 10
+    },
+    "Outputs": {
+      "Result": 1
+    },
+    "TotalEU": 1000,
+    "EUPerTick": 50,
+    "CraftingTime": 20
+  },
+  {
+    "MachineName": "Machine B",
+    "Inputs": {
+      "Item3": 2,
+      "Item4": 5
+    },
+    "Outputs": {
+      "sulfur": 3,
+      "stone": 3
+    },
+    "TotalEU": 1500,
+    "EUPerTick": 75,
+    "CraftingTime": 30
+  }
+]
