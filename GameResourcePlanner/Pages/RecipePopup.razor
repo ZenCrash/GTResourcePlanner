@@ -3,21 +3,97 @@
 
 <div class="popup-overlay">
     <div class="popup-container">
-        <h2>Select a Recipe or Add New Recipe</h2>
-        <input type="text" @bind="searchText" placeholder="Search by output value" />
-        <div class="recipe-list">
-            @foreach (var recipe in filteredRecipes)
-            {
-                <div class="recipe-item">
-                    <span>@recipe.MachineName</span>
-                    <button @onclick="() => SelectRecipe(recipe)">Select</button>
+        <h2>Select a Recipe</h2>
+
+        @*Table*@
+        <div class="container">
+            <div class="row p-0">
+                <div class="col">
+                    <hr>
                 </div>
-            }
+            </div>
+            <div class="row">
+                <div class="col">
+                    Mixer Machine
+                </div>
+            </div>
+            <div class="row p-0">
+                <div class="col">
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <b>Inputs:</b>
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col">
+                    <b>Outputs:</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    1 Dirt
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col">
+                    1 Awesomeness
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    1 Cobblestone
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    1 Gravel
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col">
+                </div>
+            </div>
+            <div class="row p-0">
+                <div class="col">
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Total: 600 EU
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Voltage: 2 EU/t
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Time: 15 secs
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p></p>
+                </div>
+            </div>
+
+
         </div>
+
+
         <div class="new-recipe">
-            <input type="text" @bind="newRecipeName" placeholder="New Recipe Name" />
-            <button @onclick="AddNewRecipe">Add New Recipe</button>
-            <button @onclick="ClosePopup">Cancel</button>
+            <button @onclick="ClosePopup" type="button" class="btn btn-outline-primary"><i class="oi oi-action-undo"></i> Back To Seach</button>
+            <button @onclick="AddNewRecipe" type="button" class="btn btn-primary">Add New Recipe</button>
+            <button @onclick="ClosePopup" type="button" class="btn btn-secondary">Cancel</button>
         </div>
     </div>
 </div>
@@ -31,27 +107,9 @@
     private List<Recepie> filteredRecipes;
     private string newRecipeName = string.Empty;
 
-    protected override void OnParametersSet()
-    {
-        filteredRecipes = Recipes.Where(recipe =>
-            recipe.Outputs.Values.Any(outputValue =>
-                outputValue.ToString().Contains(searchText, StringComparison.OrdinalIgnoreCase)
-            )
-        ).ToList();
-    }
-
-    private void SelectRecipe(Recepie recipe)
-    {
-        RecipeSelected.InvokeAsync(recipe);
-    }
-
     private void AddNewRecipe()
     {
-        if (!string.IsNullOrWhiteSpace(newRecipeName))
-        {
-            NewRecipeAdded.InvokeAsync(newRecipeName);
-            newRecipeName = string.Empty;
-        }
+        
     }
 
     private void ClosePopup()
